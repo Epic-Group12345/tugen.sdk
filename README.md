@@ -1,20 +1,32 @@
 # tugen.sdk
 
-SDK для разработчиков игр, которые хотят запускаться через TUGEN, и документация к нему. Написан на Nim.
+SDK для разработчиков игр в TUGEN. У каждой игры в лаунчере — своё пространство: мини-приложение на
+React Native, которое лаунчер открывает в своём окне на месте страницы игры. Через SDK мини-приложение
+получает от лаунчера файлы своей папки, загрузки и запуск процесса игры — и ничего сверх этого.
 
-## Состояние
+Первое мини-приложение — Minecraft ([tugen.minecraft](https://github.com/Epic-Group12345/tugen.minecraft)).
 
-Каркас: здесь появятся описание модуля запуска, через которое игра рассказывает лаунчеру, как себя
-поставить и запустить, и документация в [docs/](docs/index.md). Первый модуль запуска —
-Minecraft ([tugen.minecraft](https://github.com/Epic-Group12345/tugen.minecraft)) — служит образцом.
+```tsx
+import { defineGame, useHost } from '@tugen/sdk';
+import { Text } from 'react-native';
 
-Репозиторий публичный, а ядро tugen.core пока приватное, поэтому SDK от ядра не зависит: общие типы
-появятся здесь или ядро откроется.
+function App() {
+  const host = useHost();
+  return <Text>Память: {host.system.totalMemoryMb()} МБ</Text>;
+}
+
+export default defineGame({
+  manifest: { id: 'my-game', name: 'Моя игра', version: '1.0.0' },
+  App,
+});
+```
+
+Документация — в [docs/](docs/index.md).
 
 ## Работа
 
-Нужен Nim 2.2.12.
-
 ```bash
-nimble test
+yarn install
+yarn typecheck
+yarn test
 ```
