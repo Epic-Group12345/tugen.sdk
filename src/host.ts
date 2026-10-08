@@ -71,7 +71,15 @@ export interface GameSystem {
   locale: string;
 }
 
+export interface GameNavigation {
+  /** Открыть раздел игры (GameSection.id) — как если бы игрок нажал его в боковой панели */
+  open(section: string): void;
+  /** Выйти из игры: лаунчер вернёт основные кнопки панели и откроет главную */
+  exit(): void;
+}
+
 export interface GameHost {
+  navigation: GameNavigation;
   files: GameFiles;
   downloads: GameDownloads;
   process: GameProcess;
