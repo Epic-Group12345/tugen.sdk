@@ -1,4 +1,5 @@
-import { SDK_VERSION, defineGame, localize } from '../src';
+// game.ts без react-native: index тянет SafeAreaView, а react-native в Node не грузится
+import { SDK_VERSION, defineGame, localize } from '../src/game';
 
 const App = () => null;
 
@@ -19,6 +20,41 @@ describe('defineGame', () => {
     expect(() =>
       defineGame({ manifest: { id: '-x', name: 'x', version: '1' }, App }),
     ).toThrow();
+  });
+});
+
+describe('иконка и presentation', () => {
+  const manifest = { id: 'x', name: 'x', version: '1' };
+
+  it('принимает иконку в PascalCase и оба вида presentation', () => {
+    for (const presentation of ['embedded', 'window'] as const) {
+      const game = defineGame({
+        manifest: { ...manifest, icon: 'Cube', presentation },
+        App,
+      });
+      expect(game.manifest.presentation).toBe(presentation);
+    }
+    expect(
+      defineGame({ manifest: { ...manifest, icon: 'ArrowRight2' }, App })
+        .manifest.icon,
+    ).toBe('ArrowRight2');
+  });
+
+  it('отклоняет иконку не в PascalCase', () => {
+    for (const icon of ['cube', 'Cube-1', '', 'Куб', 'arrow right']) {
+      expect(() =>
+        defineGame({ manifest: { ...manifest, icon }, App }),
+      ).toThrow(/иконки/);
+    }
+  });
+
+  it('отклоняет неизвестный presentation', () => {
+    expect(() =>
+      defineGame({
+        manifest: { ...manifest, presentation: 'fullscreen' as never },
+        App,
+      }),
+    ).toThrow(/presentation/);
   });
 });
 
