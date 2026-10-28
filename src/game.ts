@@ -2,7 +2,7 @@ import type { ComponentType } from 'react';
 import type { SafeAreaInsets } from './insets';
 
 /** Версия SDK: лаунчер не откроет мини-приложение, собранное под более новую major-версию */
-export const SDK_VERSION = '0.3.0';
+export const SDK_VERSION = '0.4.0';
 
 /** Текст на языках интерфейса: строка — одна на все языки; иначе по коду языка, 'ru' — обязателен */
 export type LocalizedText = string | ({ ru: string } & Record<string, string>);
