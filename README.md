@@ -15,7 +15,7 @@ import { Text } from 'react-native';
 
 function App() {
   const host = useHost();
-  // SafeAreaView — чтобы текст не ушёл под острова лаунчера (плашку сверху и навигацию снизу)
+  // SafeAreaView — чтобы текст не ушёл под верхнюю плашку лаунчера
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <Text>Память: {host.system.totalMemoryMb()} МБ</Text>
@@ -36,7 +36,8 @@ export default defineGame({
 yarn tugen-map build   # → dist/my-game.map
 ```
 
-Документация — в [docs/](docs/index.md).
+В интерфейсе игры можно использовать `SvgIcon` из SDK для отрисовки небольших SVG через
+нативный растеризатор лаунчера. Подробности и документация — в [docs/](docs/index.md).
 
 ## Работа
 

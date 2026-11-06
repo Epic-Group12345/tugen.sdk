@@ -42,10 +42,26 @@ export default defineGame({
 });
 ```
 
+## SVG-иконки
+
+`SvgIcon` использует нативный SVG-растеризатор лаунчера на Windows и macOS. Это отдельный API от `manifest.icon`: манифест задаёт иконку Gravity UI для плашки лаунчера, а компонент рисует SVG внутри интерфейса игры. Цвет задаётся в формате `#RRGGBB`; для подстановки используйте `{{color}}`.
+
+```tsx
+import { SvgIcon } from '@tugen/sdk';
+
+const PLAY =
+  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill="{{color}}" d="M4 2v12l10-6z"/></svg>';
+
+<SvgIcon svg={PLAY} size={16} color="#00EAFF" />;
+```
+
+`svgIconUri(svg, size, color?)` доступен для самостоятельного использования через `<Image source={{ uri }}>`. Размер должен быть положительным, SVG — ASCII-разметкой.
+
 ## Safe Area
 
-Мини-приложение получает всю область страницы, но поверх неё лежат острова лаунчера: плашка сверху и
-навигация снизу. Сколько они закрывают по каждому краю, в DIP, — `SafeAreaInsets`
+Мини-приложение получает всю область страницы, а верхняя плашка лаунчера лежит поверх него. Нижняя
+навигация лаунчера скрыта, поэтому её место обычно занимает интерфейс самой игры. Сколько острова
+закрывают по каждому краю, в DIP, — `SafeAreaInsets`
 (`{ top, right, bottom, left }`). Под островами можно рисовать фон, а нажимаемое и текст — только
 внутри.
 
@@ -154,7 +170,7 @@ SDK даёт операции системы, а не логику игр: ка�
 
 ```
 my-game.map
- ├─ manifest.json   ← MapManifest: { format: 1, sdk: '0.4.0', entry: 'bundle.js', game: { id, name, … } }
+ ├─ manifest.json   ← MapManifest: { format: 1, sdk: '0.5.0', entry: 'bundle.js', game: { id, name, … } }
  └─ bundle.js       ← бандл мини-приложения, CommonJS
 ```
 
@@ -217,9 +233,12 @@ yarn tugen-map build src/app.tsx --manifest src/meta.ts --out build/game.map
 
 | Версия | Что добавила                                                                                                                                                                                                                        |
 | ------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 0.5.0  | `SvgIcon`, `svgIconUri`: SVG-иконки через нативный растеризатор лаунчера                                                                                                                                                            |
 | 0.4.0  | `files.copyFiles`, `files.materialize`, `files.markExecutable`, `files.absolutePath`; `system.os`, `system.arch`; `net` (`fetchText`, `fetchJson`); `storage`                                                                       |
 | 0.3.0  | `manifest.icon`, `manifest.presentation`; Safe Area: `useSafeArea`, `SafeAreaView`, проп `safeArea`; разделы рисует само мини-приложение; пакет `.map` (`parseMapManifest`, `SANDBOX_MODULES`, CLI `tugen-map`), `validateManifest` |
 | 0.2.0  | разделы (`manifest.sections`), `navigation`, `localize`                                                                                                                                                                             |
+
+Совместимость 0.5.0: добавлен UI-компонент иконки, контракт `GameHost` не менялся. Мини-приложение под 0.4.0 открывается как есть.
 
 Совместимость 0.4.0: добавились только части `GameHost`, манифест прежний. Мини-приложение под 0.3.0
 открывается как есть; собранное под 0.4.0 лаунчер, знающий только 0.3.0, не откроет — ему не хватит

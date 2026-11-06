@@ -1,4 +1,6 @@
 export { SDK_VERSION, defineGame, localize, validateManifest } from './game';
+export { SvgIcon, svgIconUri } from './icon';
+export type { SvgIconProps } from './icon';
 export type {
   GameAppProps,
   GameManifest,
