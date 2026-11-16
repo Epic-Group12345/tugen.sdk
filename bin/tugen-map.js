@@ -44,7 +44,7 @@ function loadSdkRules() {
   const code = bundleForNode({
     stdin: {
       contents: [
-        "export { SDK_VERSION, validateManifest } from './game';",
+        "export { SDK_VERSION, validateManifest } from './app';",
         "export { MAP_FORMAT, SANDBOX_MODULES } from './map';",
       ].join('\n'),
       resolveDir: src,
@@ -82,11 +82,11 @@ function build(args) {
   // Модули песочницы не вшиваем: манифесту они нужны только ради типов
   const manifestPath = path.resolve(cwd, args.manifest);
   const manifestCode = bundleForNode({ entryPoints: [manifestPath], external });
-  const game = evaluate(manifestCode, manifestPath).manifest;
-  if (!game) {
+  const app = evaluate(manifestCode, manifestPath).manifest;
+  if (!app) {
     throw new Error(`${args.manifest}: нет экспорта manifest`);
   }
-  const error = rules.validateManifest(game);
+  const error = rules.validateManifest(app);
   if (error) throw new Error(`${args.manifest}: ${error}`);
 
   // Бандл: CommonJS под Hermes; всё, кроме модулей песочницы, вшивается внутрь
@@ -111,7 +111,7 @@ function build(args) {
     format: rules.MAP_FORMAT,
     sdk: rules.SDK_VERSION,
     entry: 'bundle.js',
-    game,
+    app,
   };
   const zip = zipSync({
     'manifest.json': strToU8(JSON.stringify(mapManifest, null, 2)),
@@ -120,11 +120,11 @@ function build(args) {
 
   const out = path.resolve(
     cwd,
-    args.out ?? path.join('dist', `${game.id}.map`),
+    args.out ?? path.join('dist', `${app.id}.map`),
   );
   fs.mkdirSync(path.dirname(out), { recursive: true });
   fs.writeFileSync(out, zip);
-  return { out, size: zip.length, game };
+  return { out, size: zip.length, app };
 }
 
 function main() {
@@ -134,9 +134,9 @@ function main() {
     process.exit(2);
   }
   try {
-    const { out, size, game } = build(args);
+    const { out, size, app } = build(args);
     console.log(
-      `Пакет ${game.id} ${game.version}: ${path.relative(
+      `Пакет ${app.id} ${app.version}: ${path.relative(
         process.cwd(),
         out,
       )} (${Math.ceil(size / 1024)} КБ)`,
