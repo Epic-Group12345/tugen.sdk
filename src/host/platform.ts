@@ -41,5 +41,8 @@ export interface AppRecording {
 export interface AppMicrophone {
   requestAccess(): Promise<boolean>;
   /** Начать запись в файл пространства; maxMs — предел длительности, по умолчанию без предела */
-  record(options?: { path: string; maxMs?: number }): Promise<AppRecording | null>;
+  record(options?: {
+    path: string;
+    maxMs?: number;
+  }): Promise<AppRecording | null>;
 }

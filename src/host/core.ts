@@ -25,7 +25,9 @@ export interface AppViewport {
   /** Отступы, которые закрывают острова лаунчера */
   safeArea(): SafeAreaInsets;
   /** Подписка на изменение размера или отступов. Возвращает функцию отписки */
-  subscribe(listener: (size: AppViewportSize, safeArea: SafeAreaInsets) => void): () => void;
+  subscribe(
+    listener: (size: AppViewportSize, safeArea: SafeAreaInsets) => void,
+  ): () => void;
 }
 
 export interface MainButtonState {

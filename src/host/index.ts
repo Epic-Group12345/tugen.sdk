@@ -14,7 +14,12 @@ import type {
   AppSystem,
 } from './capabilities';
 import type { AppLifecycle, AppTheme, AppUi, AppViewport } from './core';
-import type { AppCamera, AppClipboard, AppLinks, AppMicrophone } from './platform';
+import type {
+  AppCamera,
+  AppClipboard,
+  AppLinks,
+  AppMicrophone,
+} from './platform';
 
 export type * from './capabilities';
 export type * from './core';
