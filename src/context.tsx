@@ -1,13 +1,13 @@
 import { createContext, useContext } from 'react';
-import type { GameHost } from './host';
+import type { TugenHost } from './host';
 
-const HostContext = createContext<GameHost | null>(null);
+const HostContext = createContext<TugenHost | null>(null);
 
-/** Обёртку ставит лаунчер вокруг App игры; самому мини-приложению она не нужна */
+/** Обёртку ставит лаунчер вокруг App мини-приложения; самому мини-приложению она не нужна */
 export const HostProvider = HostContext.Provider;
 
 /** Доступ к лаунчеру из компонентов мини-приложения */
-export function useHost(): GameHost {
+export function useHost(): TugenHost {
   const host = useContext(HostContext);
   if (!host) {
     throw new Error(

@@ -1,14 +1,23 @@
-export { SDK_VERSION, defineGame, localize, validateManifest } from './game';
+export {
+  APP_PERMISSIONS,
+  SDK_VERSION,
+  defineApp,
+  localize,
+  validateManifest,
+} from './app';
+export type {
+  AppKind,
+  AppManifest,
+  AppPermission,
+  AppPresentation,
+  AppProps,
+  AppSection,
+  DefineAppInput,
+  LocalizedText,
+  TugenApp,
+} from './app';
 export { SvgIcon, svgIconUri } from './icon';
 export type { SvgIconProps } from './icon';
-export type {
-  GameAppProps,
-  GameManifest,
-  GamePresentation,
-  GameSection,
-  LocalizedText,
-  TugenGame,
-} from './game';
 export { HostProvider, useHost } from './context';
 export type * from './host';
 export {
@@ -29,3 +38,5 @@ export {
   parseMapManifest,
 } from './map';
 export type { MapManifest, MapManifestResult } from './map';
+export * from './svg';
+export * from './web';

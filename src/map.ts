@@ -4,12 +4,15 @@
 //
 // Модуль без react-native: его же выполняет CLI в Node.
 
-import { validateManifest, type GameManifest } from './game';
+import { validateManifest, type AppManifest } from './app';
 
 export const MAP_EXTENSION = '.map';
 
-/** Версия формата пакета: лаунчер не откроет пакет с format, которого не знает */
-export const MAP_FORMAT = 1;
+/**
+ * Версия формата пакета: лаунчер не откроет пакет с format, которого не знает. Версия 2 — после
+ * перехода на мини-приложения (поле манифеста `app` вместо `game`)
+ */
+export const MAP_FORMAT = 2;
 
 /**
  * Единственные внешние модули, которые бандл пакета может получить через require; всё остальное
@@ -30,15 +33,15 @@ export const SANDBOX_MODULES = [
  * Файл manifest.json в корне пакета.
  *
  * Бандл (`entry`) — CommonJS. Его экспорт по умолчанию — `module.exports.default` или сам
- * `module.exports` — результат `defineGame(...)`
+ * `module.exports` — результат `defineApp(...)`
  */
 export interface MapManifest {
-  format: 1;
+  format: typeof MAP_FORMAT;
   /** Версия SDK, под которую собран пакет (x.y.z) */
   sdk: string;
   /** Путь бандла внутри zip, через «/», обычно 'bundle.js' */
   entry: string;
-  game: GameManifest;
+  app: AppManifest;
 }
 
 export type MapManifestResult =
@@ -74,7 +77,7 @@ export function parseMapManifest(text: string): MapManifestResult {
   if (typeof data !== 'object' || data === null || Array.isArray(data)) {
     return { ok: false, error: 'manifest.json — не объект' };
   }
-  const { format, sdk, entry, game } = data as Record<string, unknown>;
+  const { format, sdk, entry, app } = data as Record<string, unknown>;
   if (format !== MAP_FORMAT) {
     return {
       ok: false,
@@ -86,9 +89,9 @@ export function parseMapManifest(text: string): MapManifestResult {
   }
   const error =
     entryError(entry) ??
-    (typeof game === 'object' && game !== null
-      ? validateManifest(game as GameManifest)
-      : 'нет манифеста игры (game)');
+    (typeof app === 'object' && app !== null
+      ? validateManifest(app as AppManifest)
+      : 'нет манифеста мини-приложения (app)');
   if (error) return { ok: false, error };
   return { ok: true, manifest: data as MapManifest };
 }
